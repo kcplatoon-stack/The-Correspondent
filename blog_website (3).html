@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Correspondent — A Journalist's Blog</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --ink-mid: #3d2f1a;
+    --ink-soft: #6b5a43;
+    --ink-faint: #c4b49a;
+    --paper: #faf6ef;
+    --paper-dark: #f0e9db;
+    --paper-mid: #e5d9c5;
+    --accent: #b5330a;
+    --accent-light: #e8d5cc;
+    --gold: #c49a2a;
+    --rule: #d4c4a8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.7;
+  }
+
+  /* ── MASTHEAD ── */
+  .masthead {
+    background: var(--ink);
+    color: var(--paper);
+    text-align: center;
+    padding: 12px 24px 0;
+    border-bottom: 4px double var(--gold);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .masthead::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 28px,
+      rgba(255,255,255,0.03) 28px,
+      rgba(255,255,255,0.03) 29px
+    );
+    pointer-events: none;
+  }
+
+  .dateline {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .site-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(52px, 8vw, 96px);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--paper);
+    margin-bottom: 6px;
+    position: relative;
+  }
+
+  .site-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .tagline {
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+    margin-bottom: 18px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    border-top: 1px solid rgba(255,255,255,0.12);
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+  }
+
+  nav a {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    text-decoration: none;
+    padding: 4px 20px;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    transition: color 0.2s;
+  }
+
+  nav a:last-child { border-right: none; }
+  nav a:hover { color: var(--gold); }
+
+  /* ── HERO RULE ── */
+  .rule-bar {
+    background: var(--paper-dark);
+    border-bottom: 1px solid var(--rule);
+    padding: 8px 40px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    overflow: hidden;
+  }
+
+  .rule-bar span { white-space: nowrap; }
+
+  .rule-divider {
+    height: 1px;
+    flex: 1;
+    background: var(--rule);
+  }
+
+  /* ── LAYOUT ── */
+  .container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 56px;
+    padding: 56px 0 80px;
+    align-items: start;
+  }
+
+  /* ── MAIN ARTICLE ── */
+  .article-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--paper);
+    background: var(--accent);
+    padding: 5px 12px;
+    margin-bottom: 20px;
+  }
+
+  .article-headline {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(32px, 4.5vw, 52px);
+    font-weight: 900;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+
+  .article-headline em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .article-dek {
+    font-size: 19px;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--ink-mid);
+    line-height: 1.55;
+    margin-bottom: 22px;
+    padding-left: 18px;
+    border-left: 3px solid var(--accent);
+  }
+
+  .byline-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 36px;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--ink-mid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--paper);
+    flex-shrink: 0;
+  }
+
+  .byline-text {
+    flex: 1;
+  }
+
+  .byline-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .byline-meta {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 1px;
+  }
+
+  .read-time {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: var(--paper-mid);
+    padding: 4px 10px;
+    border-radius: 2px;
+  }
+
+  /* ── ARTICLE BODY ── */
+  .article-body {
+    font-size: 18px;
+    line-height: 1.82;
+    color: var(--ink-mid);
+  }
+
+  .article-body p {
+    margin-bottom: 1.5em;
+  }
+
+  .article-body p:first-child::first-letter {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 78px;
+    font-weight: 900;
+    float: left;
+    line-height: 0.75;
+    margin: 8px 12px 0 0;
+    color: var(--ink);
+    padding: 4px 4px 0 0;
+  }
+
+  .article-body h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 2.2em 0 0.7em;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--rule);
+  }
+
+  .article-body h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 2em 0 0.5em;
+  }
+
+  .pullquote {
+    margin: 2.5em -20px;
+    padding: 28px 32px;
+    background: var(--ink);
+    color: var(--paper);
+    position: relative;
+  }
+
+  .pullquote::before {
+    content: '\201C';
+    font-family: 'Playfair Display', serif;
+    font-size: 120px;
+    line-height: 0.6;
+    color: var(--gold);
+    position: absolute;
+    top: 28px;
+    left: 20px;
+    opacity: 0.6;
+  }
+
+  .pullquote p {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 22px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.5;
+    padding-left: 60px;
+    color: var(--paper);
+    margin: 0;
+  }
+
+  .pullquote p::first-letter { font-size: inherit; float: none; margin: 0; color: inherit; }
+
+  .pullquote cite {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-top: 12px;
+    padding-left: 60px;
+  }
+
+  .tip-box {
+    margin: 2em 0;
+    padding: 20px 24px;
+    background: var(--accent-light);
+    border-left: 4px solid var(--accent);
+  }
+
+  .tip-box .tip-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .tip-box p {
+    font-size: 16px;
+    color: var(--ink-mid);
+    margin: 0;
+    line-height: 1.65;
+  }
+
+  .tip-box p::first-letter { font-size: inherit; float: none; margin: 0; color: inherit; }
+
+  .num-list {
+    counter-reset: item;
+    list-style: none;
+    padding: 0;
+    margin: 1.2em 0 1.8em;
+  }
+
+  .num-list li {
+    counter-increment: item;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 14px;
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--ink-mid);
+  }
+
+  .num-list li::before {
+    content: counter(item, decimal-leading-zero);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent);
+    min-width: 24px;
+    padding-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .article-footer {
+    margin-top: 3em;
+    padding-top: 24px;
+    border-top: 3px double var(--rule);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border: 1px solid var(--rule);
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .tag:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .share-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .share-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border: none;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: opacity 0.2s;
+    font-weight: 500;
+  }
+
+  .share-btn:hover { opacity: 0.8; }
+  .share-twitter { background: #1d9bf0; color: #fff; }
+  .share-copy { background: var(--ink); color: var(--paper); }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: sticky;
+    top: 32px;
+  }
+
+  .sidebar-section {
+    margin-bottom: 36px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .sidebar-section:last-child {
+    border-bottom: none;
+  }
+
+  .sidebar-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sidebar-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  .about-bio {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+
+  .about-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--ink);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .about-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+
+  .about-title {
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+
+  .about-text {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.65;
+  }
+
+  .recent-post {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.2s;
+  }
+
+  .recent-post:hover { opacity: 0.7; }
+
+  .recent-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    font-weight: 900;
+    color: var(--paper-mid);
+    line-height: 1;
+    min-width: 28px;
+    flex-shrink: 0;
+  }
+
+  .recent-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.35;
+    margin-bottom: 3px;
+  }
+
+  .recent-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+  }
+
+  .newsletter-box {
+    background: var(--ink);
+    padding: 22px 20px;
+    color: var(--paper);
+  }
+
+  .newsletter-box p {
+    font-size: 13px;
+    color: var(--ink-faint);
+    line-height: 1.55;
+    margin-bottom: 14px;
+  }
+
+  .newsletter-input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.07);
+    color: var(--paper);
+    font-family: 'Source Serif 4', serif;
+    font-size: 14px;
+    margin-bottom: 8px;
+    border-radius: 2px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .newsletter-input::placeholder { color: rgba(255,255,255,0.3); }
+  .newsletter-input:focus { border-color: var(--gold); }
+
+  .newsletter-btn {
+    width: 100%;
+    padding: 10px;
+    background: var(--accent);
+    border: none;
+    color: var(--paper);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.2s;
+  }
+
+  .newsletter-btn:hover { background: #8a260a; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: var(--ink-faint);
+    text-align: center;
+    padding: 40px 32px;
+    border-top: 4px double var(--gold);
+  }
+
+  footer .footer-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--paper);
+    margin-bottom: 8px;
+  }
+
+  footer p {
+    font-size: 13px;
+    line-height: 1.6;
+    max-width: 480px;
+    margin: 0 auto 16px;
+  }
+
+  footer .footer-rule {
+    width: 48px;
+    height: 2px;
+    background: var(--gold);
+    margin: 20px auto;
+  }
+
+  footer .footer-copy {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.2);
+  }
+
+  @media (max-width: 768px) {
+    .two-col { grid-template-columns: 1fr; gap: 40px; padding: 40px 0 60px; }
+    .sidebar { position: static; }
+    .container { padding: 0 20px; }
+    .pullquote { margin: 2em -8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <p class="dateline">Sunday, April 27, 2026 &nbsp;·&nbsp; Vol. III, No. 18 &nbsp;·&nbsp; On Writing, Craft & Newsgathering</p>
+  <h1 class="site-title">The <em>Correspondent</em></h1>
+  <p class="tagline">A journal for those who write the world into being</p>
+  <nav>
+    <a href="#">Craft</a>
+    <a href="#">Field Notes</a>
+    <a href="#">Interviews</a>
+    <a href="#">Ethics</a>
+    <a href="#">Digital Age</a>
+    <a href="#">Archive</a>
+  </nav>
+</header>
+
+<!-- RULE BAR -->
+<div class="rule-bar">
+  <span>Featured Essay</span>
+  <div class="rule-divider"></div>
+  <span>Craft &amp; Practice</span>
+  <div class="rule-divider"></div>
+  <span>Blogging &amp; Journalism</span>
+  <div class="rule-divider"></div>
+  <span>2,400 words</span>
+</div>
+
+<!-- MAIN CONTENT -->
+<main class="container">
+  <div class="two-col">
+
+    <!-- ARTICLE -->
+    <article>
+      <span class="article-label">&#x2022; Featured Essay</span>
+
+      <h1 class="article-headline">
+        Why Every Journalist Should Keep a <em>Blog</em>
+      </h1>
+
+      <p class="article-dek">
+        In an era of algorithmic feeds and shrinking newsrooms, the humble blog remains the single best training ground for the working reporter. Here's how writing publicly — and consistently — sharpens every skill that matters.
+      </p>
+
+      <div class="byline-row">
+        <div class="avatar">JK</div>
+        <div class="byline-text">
+          <div class="byline-name">Jatin Khayani</div>
+          <div class="byline-meta">Trainee Journalist · IIMC, New Delhi</div>
+        </div>
+        <span class="read-time">12 min read</span>
+      </div>
+
+      <div class="article-body">
+
+        <p>
+          There is a certain kind of journalist who will tell you, in complete seriousness, that blogging is beneath them. They have filed dispatches from war zones. They have stared down press secretaries and prime ministers. What could a personal blog possibly teach them that a deadline and an angry editor have not? Quite a lot, as it turns out.
+        </p>
+
+        <p>
+          The case for blogging as journalistic training isn't romantic. It's mechanical. The craft of journalism lives in repetition — the same mental motions, over and over, until they become automatic. Blogging is repetition made frictionless. You don't need an assignment. You don't need approval. You sit down, you think in public, and you get better.
+        </p>
+
+        <div class="pullquote">
+          <p>A journalist who cannot explain something to a stranger on a bus cannot really claim to understand it. Blogging puts you on the bus, every day.</p>
+          <cite>— The Correspondent, Craft &amp; Practice Series</cite>
+        </div>
+
+        <h2>The Discipline of the Blank Page</h2>
+
+        <p>
+          Professional journalism is reactive. An editor summons you. A source calls. Something explodes somewhere and you are pointed in its direction. This is the life, and it has its pleasures. But it also produces a dangerous dependency: many journalists discover, to their horror, that they cannot write without the engine of assignment running behind them.
+        </p>
+
+        <p>
+          Blogging is the cure for this. A blog makes no demands and offers no structure. The prompt is always the same — what do you think? — and the difficulty of answering it honestly, publicly, and repeatedly is the whole point. Over months and years, you develop what can only be called an editorial instinct: a nose for what is interesting, a sense of when you actually have something to say rather than merely something to report.
+        </p>
+
+        <div class="tip-box">
+          <p class="tip-label">Practical Tip</p>
+          <p>Commit to one post per week for three months before evaluating whether blogging is "working" for you. The first twelve posts are almost always disappointing. Posts thirteen through thirty are where the voice begins to emerge.</p>
+        </div>
+
+        <h3>What Regular Writing Actually Trains</h3>
+
+        <p>
+          The novelist Ann Lamott famously advised writers to permit themselves terrible first drafts. Journalists rarely have this luxury in print, which is why so many of them write in a kind of defensive crouch — competent, careful, and entirely forgettable. Blogging, with its lower stakes, licenses experimentation. You try an unusual structure. It fails. You note why it failed. You try something else next week.
+        </p>
+
+        <p>
+          This is how style is built: not by reading about it, but by generating vast quantities of your own prose and paying close attention to where it goes wrong. The blog is the laboratory. The byline doesn't follow you home.
+        </p>
+
+        <h2>Clarity as a Journalistic Virtue</h2>
+
+        <p>
+          Every journalist believes they write clearly. They are usually wrong. Clarity is not the absence of jargon; it is the presence of a reader in your mind as you write — a specific, skeptical, non-specialist human being who has no particular reason to keep reading. Blogging, especially a blog with a public readership, forces you to maintain that reader.
+        </p>
+
+        <p>
+          When you write for a news organisation, your prose is filtered through editors, sub-editors, and house style. Your confusions are smoothed over before they reach the page. On a blog, there is no such protection. If your argument is muddled, your readers will simply leave. The feedback is instant, brutal, and honest in a way that most journalism never is.
+        </p>
+
+        <ol class="num-list">
+          <li>You learn to write strong opening sentences, because nothing else will stop a scrolling reader.</li>
+          <li>You learn to cut, because long-form personal essays that ramble are abandoned immediately.</li>
+          <li>You learn to end well — perhaps the most underrated skill in journalism — because a post that dissolves into nothing is a promise broken.</li>
+          <li>You learn to write headlines that are honest about what the piece contains, because a misleading headline on a personal blog simply makes people distrust you.</li>
+          <li>You learn to have an actual point, because a post without one is obvious in a way that a newspaper article, with its inverted pyramid and neutral tone, can often disguise.</li>
+        </ol>
+
+        <h2>Building a Public Record of Thought</h2>
+
+        <p>
+          A blog is, among other things, a searchable archive of everything you have ever thought about publicly. This is more professionally useful than most journalists realise. When you pitch a story or apply for a position, your blog is evidence: evidence that you have been thinking seriously about your beat for years, that your views have evolved in traceable ways, that you have the curiosity and the stamina to return to a subject again and again.
+        </p>
+
+        <p>
+          It is also, less comfortably, a record of your mistakes. Something you wrote four years ago may look embarrassing today. Good. That embarrassment is useful information about how you have grown. The journalist who has never been wrong in public is usually the journalist who has never said anything interesting enough to be wrong about.
+        </p>
+
+        <div class="pullquote">
+          <p>The blog that embarrasses you most is almost certainly the one doing the most work. Discomfort is the price of actual thinking.</p>
+          <cite>— On keeping an honest public record</cite>
+        </div>
+
+        <h2>Source Development and the Open Notebook</h2>
+
+        <p>
+          Here is something that experienced journalists know but rarely teach explicitly: sources find you as much as you find them. A journalist with a visible, consistent body of work on a specific subject attracts sources who would never respond to a cold call. They have read your work. They know your perspective. They trust, or at least understand, what you are trying to do.
+        </p>
+
+        <p>
+          Blogging is one of the most efficient ways to build this kind of visibility. A beat reporter who also writes a thoughtful blog about their area of coverage will, within two or three years, have a network of sources that their colleagues — equally talented, but invisible — will struggle to match.
+        </p>
+
+        <h3>The Specific Discipline of Opinion</h3>
+
+        <p>
+          News writing trains you to suppress your views. This is not a deficiency — the discipline of objectivity has produced some of the finest journalism in history. But it can produce, as a side effect, a journalist who no longer knows what they actually think about anything. Blogging is a direct corrective.
+        </p>
+
+        <p>
+          When you are required to hold and defend a position publicly — not as part of a reported piece, but simply as yourself — you develop a kind of intellectual musculature. You are forced to consider counterarguments before your readers produce them. You learn to distinguish between your genuine views and the views you have absorbed from your sources and your environment. You become, in short, a more honest thinker, and honest thinking is the foundation of good journalism.
+        </p>
+
+        <h2>The Question of Voice</h2>
+
+        <p>
+          Voice is the quality that separates memorable journalism from competent journalism. It is also, of all the elements of craft, the most difficult to teach and the least discussed, perhaps because it emerges not from technique but from the accumulation of a million small decisions about how to say a thing.
+        </p>
+
+        <p>
+          Blogging accelerates the accumulation. You write a post in which you sound, rereading it, like someone impersonating a journalist. You write another in which some strange sentence appears — a rhythm, an image, a turn of phrase — that sounds, surprisingly, like yourself. You try to reproduce it. Slowly, over hundreds of thousands of words, you build a style that is genuinely your own. This is not something that happens in a newsroom, because a newsroom is, necessarily, a place where individual voice is somewhat suppressed in the service of institutional voice. A blog is the place where you remember who you are.
+        </p>
+
+        <div class="tip-box">
+          <p class="tip-label">On Authenticity</p>
+          <p>Don't start a blog to "build your brand." Start a blog because you are genuinely interested in something and want to think about it in public. Readers can tell the difference in the first three paragraphs. Authentic curiosity is the only sustainable engine for regular writing.</p>
+        </div>
+
+        <h2>A Final Word on Volume</h2>
+
+        <p>
+          The greatest single benefit of blogging is this: it makes you write more. This sounds obvious, and in a way it is. But volume matters in a way that writing education sometimes fails to emphasise. The journalist with two million published words behind them writes better than the journalist with two hundred thousand, not because practice always makes perfect, but because practice makes you less afraid. The blank page loses its power. The first sentence becomes slightly less agonising. You know, from experience, that the piece will come together because it always has.
+        </p>
+
+        <p>
+          Start a blog. Write about your beat, your reading, your confusions, your reversals of opinion. Write about what you found in the archive that no one else seems to have noticed. Write about why a story that everyone covered felt somehow incomplete. Write badly, for a while, and then write less badly. Write in public, and let the discipline of the public gaze do what no editor can: make you accountable to your own standards, every single week.
+        </p>
+
+        <div class="article-footer">
+          <div class="tags">
+            <a href="#" class="tag">Craft</a>
+            <a href="#" class="tag">Writing</a>
+            <a href="#" class="tag">Digital Journalism</a>
+            <a href="#" class="tag">Blogging</a>
+          </div>
+          <div class="share-row">
+            <button class="share-btn share-twitter">Share</button>
+            <button class="share-btn share-copy" onclick="navigator.clipboard.writeText(window.location.href); this.textContent='Copied!'; setTimeout(()=>this.textContent='Copy Link',1800)">Copy Link</button>
+          </div>
+        </div>
+
+      </div>
+    </article>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">About the author</div>
+        <div class="about-bio">
+          <div class="about-avatar">JK</div>
+          <div>
+            <div class="about-name">Jatin Khayani</div>
+            <div class="about-title">Trainee Journalist · IIMC, New Delhi</div>
+          </div>
+        </div>
+        <p class="about-text">
+          Jatin is a trainee journalist at the Indian Institute of Mass Communication, New Delhi. He writes about the craft of journalism, storytelling, and the evolving media landscape in India.
+        </p>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Recent posts</div>
+
+        <a href="#" class="recent-post">
+          <span class="recent-num">01</span>
+          <div>
+            <div class="recent-title">The Art of the Impossible Interview</div>
+            <div class="recent-meta">April 20 · 9 min</div>
+          </div>
+        </a>
+
+        <a href="#" class="recent-post">
+          <span class="recent-num">02</span>
+          <div>
+            <div class="recent-title">What Notebooks Are Really For</div>
+            <div class="recent-meta">April 13 · 6 min</div>
+          </div>
+        </a>
+
+        <a href="#" class="recent-post">
+          <span class="recent-num">03</span>
+          <div>
+            <div class="recent-title">On Covering Catastrophe Without Burning Out</div>
+            <div class="recent-meta">April 6 · 11 min</div>
+          </div>
+        </a>
+
+        <a href="#" class="recent-post">
+          <span class="recent-num">04</span>
+          <div>
+            <div class="recent-title">The Second Source Problem</div>
+            <div class="recent-meta">March 30 · 7 min</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Newsletter</div>
+        <div class="newsletter-box">
+          <p>Essays on craft, ethics, and the state of the trade — every Sunday morning.</p>
+          <input class="newsletter-input" type="email" placeholder="your@email.com" />
+          <button class="newsletter-btn">Subscribe — it's free</button>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Topics</div>
+        <div class="tags" style="flex-wrap: wrap; gap: 8px;">
+          <a href="#" class="tag">Craft</a>
+          <a href="#" class="tag">Field Notes</a>
+          <a href="#" class="tag">Interviewing</a>
+          <a href="#" class="tag">Ethics</a>
+          <a href="#" class="tag">Sources</a>
+          <a href="#" class="tag">Writing</a>
+          <a href="#" class="tag">Digital</a>
+          <a href="#" class="tag">Editing</a>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-title">The Correspondent</div>
+  <p>A journal dedicated to the craft and ethics of journalism. Published every Sunday. Written by working reporters, for working reporters.</p>
+  <div class="footer-rule"></div>
+  <p class="footer-copy">© 2026 The Correspondent · All rights reserved</p>
+</footer>
+
+</body>
+</html>
